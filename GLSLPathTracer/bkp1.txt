@@ -1,0 +1,67 @@
+Ray iRay = Ray(inters.point+inters.normal*0.0001, getRandHemiDeg(inters.normal, uv+iTime+float(rSpp), uv*vec2(89898.32, -23452.234)+iTime+float(rSpp), uv*vec2(-7.3,9.1)+iTime+float(rSpp), 180.));//normalize(vec3(rand(uv+iTime)*2.-1., rand(uv*vec2(1.87, 4.234)+iTime)*2.-1., rand(uv*vec2(1.12, -7.124)+iTime)*2.-1.)));
+				Intersection iInters = trace(iRay);
+				if(iInters != miss){
+					for(int gi = 1; gi < 6; gi++){
+						if(iInters.mat.emit > 0.0){
+							float dist = length(inters.point - iInters.point);
+							vec4 col = (iInters.mat.albedo * iInters.mat.emit) * (1./pow(dist, 2.0));
+							difColor += vec4(inters.mat.albedo.rgb * col.rgb*absorption, 1.);
+							break;
+						}
+						else{
+							iRay = Ray(iInters.point+iInters.normal*0.001, getRandHemiDeg(iInters.normal, uv+iTime+float(rSpp)+float(gi), uv*vec2(89898.32, -23452.234)+iTime+float(rSpp)+float(gi), uv*vec2(-7.3,9.1)+iTime+float(rSpp)+float(gi), 180.));
+
+							iInters = trace(iRay);
+						}
+					}
+				}
+				else{
+					difColor += inters.mat.albedo*ambient*absorption;
+				}
+				
+				Ray iRay;
+				Intersection iInters = inters;
+				Intersection prevIinters = iInters;
+				for(int gi=0; gi<5; gi++){
+					prevIinters = iInters;
+					iRay = Ray(iInters.point+iInters.normal*0.0001, getRandHemiDeg(iInters.normal, uv+iTime+float(rSpp), uv*vec2(89898.32, -23452.234)+iTime+float(rSpp), uv*vec2(-7.3,9.1)+iTime+float(rSpp), 180.));
+					iInters = trace(iRay);
+
+					if(iInters != miss){
+						if(iInters.mat.emit > 0.){
+							float dist = length(prevIinters.point - iInters.point);
+							vec4 col = (iInters.mat.albedo * iInters.mat.emit) * (1./pow(dist, 2.0));
+							difColor += vec4(inters.mat.albedo.rgb * col.rgb*absorption, 1.);
+							break;
+						}
+					}
+					else{
+						difColor += inters.mat.albedo*ambient*absorption;
+						break;
+					}
+				}
+				
+				Ray iRay;
+				Intersection iInters = inters;
+				Intersection prevIinters = iInters;
+				for(int gi=0; gi<bounces; gi++){
+					prevIinters = iInters;
+					iRay = Ray(iInters.point+iInters.normal*0.0001, getRandHemiDeg(iInters.normal, uv+iTime+float(rSpp)+float(gi), uv*vec2(89898.32, -23452.234)+iTime+float(rSpp)+float(gi), uv*vec2(-7.3,9.1)+iTime+float(rSpp)+float(gi), 180.));
+					iInters = trace(iRay);
+
+					if(iInters != miss){
+						if(iInters.mat.emit > 0.){
+							float dist = length(prevIinters.point - iInters.point);
+							vec4 col = (iInters.mat.albedo * iInters.mat.emit) * (1./pow(dist, 2.0));
+							difColor += vec4(prevIinters.mat.albedo.rgb * col.rgb*absorption*indirAtten, 1.);
+							break;
+						}
+					}
+					else{
+						difColor += inters.mat.albedo*ambient*absorption*indirAtten;
+						break;
+					}
+					
+					indirAtten *= 0.9;
+					indirAtten.w = 1.;
+				}
