@@ -1,0 +1,5 @@
+WASD - move
+Z - toggle mouse/move camera (fps like)
+F1 - debug menu (you can edit resolution, filtering modes etc..)
+X - regulate aperture for depth of field by moving the mouse left or right
+LEFT MOUSE - set depth of field focal distance (based on the distance of what you're clicking on)
