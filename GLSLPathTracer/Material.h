@@ -1,7 +1,7 @@
 #pragma once
 
-#include <parrlib/math/vector2f.h>
-#include <parrlib/math/vector3f.h>
+#include <parrlibcore/vector2f.h>
+#include <parrlibcore/vector3f.h>
 
 using namespace prb;
 

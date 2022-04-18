@@ -1,6 +1,6 @@
 #pragma once
 
-#include <parrlib/math/Vector3f.h>
+#include <parrlibcore/Vector3f.h>
 
 using namespace prb;
 

@@ -7,14 +7,13 @@
 
 #include <math.h>
 #include <string>
-#include <experimental\filesystem>
 #include <time.h>
 #include <chrono>
 
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-#include <parrlib/math/vector2f.h>
+#include <parrlibcore/vector2f.h>
 
 #include <parrlibgl/context.h>
 #include <parrlibgl/util.h>
@@ -203,7 +202,7 @@ void init() {
 		std::wstring result = L"";
 		std::wstring path = L"scenes/";
 		int sceneN = 0;
-		for (const auto & entry : std::experimental::filesystem::directory_iterator(path)) {
+		for (const auto & entry : std::filesystem::directory_iterator(path)) {
 			std::wstring scene = stru::path(entry.path())[-1];
 			//scene = scene.substr(scene.find('\\')+1);
 			//scene = scene.substr(0, scene.find('.'));
@@ -228,7 +227,7 @@ void init() {
 
 			int iter = 0;
 			bool found = false;
-			for (const auto & entry : std::experimental::filesystem::directory_iterator(path)) {
+			for (const auto & entry : std::filesystem::directory_iterator(path)) {
 				if (iter >= stru::toi(toLoad)) { 
 					found = true; 
 					toLoad = ((std::wstring)entry.path()).substr(((std::wstring)entry.path()).find(L'\\')+1);
@@ -345,29 +344,29 @@ void update() {
 	}
 
 	if (input::getKey(GLFW_KEY_W)) {
-		camPos += forward * rSpeed*gtime::deltaTime;
+		camPos += forward * rSpeed*tick::deltaTime;
 		resetGraphics();
 	}
 	if (input::getKey(GLFW_KEY_S)) {
-		camPos -= forward * rSpeed* gtime::deltaTime;
+		camPos -= forward * rSpeed* tick::deltaTime;
 		resetGraphics();
 	}
 
 	if (input::getKey(GLFW_KEY_A)) {
-		camPos -= right * rSpeed* gtime::deltaTime;
+		camPos -= right * rSpeed* tick::deltaTime;
 		resetGraphics();
 	}
 	if (input::getKey(GLFW_KEY_D)) {
-		camPos += right * rSpeed* gtime::deltaTime;
+		camPos += right * rSpeed* tick::deltaTime;
 		resetGraphics();
 	}
 
 	if (input::getKey(GLFW_KEY_SPACE)) {
-		camPos += up * rSpeed* gtime::deltaTime;
+		camPos += up * rSpeed* tick::deltaTime;
 		resetGraphics();
 	}
 	if (input::getKey(GLFW_KEY_C)) {
-		camPos -= up * rSpeed* gtime::deltaTime;
+		camPos -= up * rSpeed* tick::deltaTime;
 		resetGraphics();
 	}
 
@@ -466,7 +465,7 @@ void draw() {
 	fbo.bind();
 
 	pathShader.use();
-	pathShader.setUniform("iTime", (float)gtime::time);
+	pathShader.setUniform("iTime", (float)tick::time);
 	pathShader.setUniform("iResolution", fbo.size());
 
 	pathShader.setUniform("ambientIntensity", ambientIntensity);
@@ -523,7 +522,7 @@ void draw() {
 	}
 
 	accumShader.use();
-	accumShader.setUniform("iTime", (float)gtime::time);
+	accumShader.setUniform("iTime", (float)tick::time);
 	accumShader.setUniform("iResolution", fbo.size());
 	accumShader.setUniform("fboRes", fbo.size());
 	accumShader.setUniform("curSpp", curSpp);
